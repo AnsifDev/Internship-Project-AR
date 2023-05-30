@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     private float cameraRotX;
     [SerializeField] private float lookSpeed, lookXLimit = 45;
     [SerializeField] private bool btn_down = false, mouse_controll = false;
+    [SerializeField] private Gun gun;
 
     private void Awake()
     {
@@ -32,6 +33,10 @@ public class Player : MonoBehaviour
         if (Input.GetButton("Jump") && characterController.isGrounded)
         {
             movementDirection.y = jumpPower;
+        }
+
+        if (Input.GetMouseButtonDown(0)) {
+            gun.shoot();
         }
 
         if (!characterController.isGrounded)

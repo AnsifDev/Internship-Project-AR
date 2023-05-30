@@ -11,14 +11,10 @@ public class Gun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) {
-            shoot();
-        }
-
         Debug.DrawRay(rayOrgin.position, rayOrgin.forward*maxDist, Color.red);
     }
 
-    void shoot() {
+    public void shoot() {
         RaycastHit raycastHit;
         if (Physics.Raycast(rayOrgin.position, rayOrgin.forward, out raycastHit, maxDist, layerMask)) {
             Debug.Log(raycastHit.collider.gameObject);
