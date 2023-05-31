@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Enemy : MonoBehaviour
     bool playerInSight;
     [SerializeField] private Transform checkpost1, checkpost2;
     [SerializeField] private Gun gun;
+    [SerializeField] private Slider slider;
     private float time = 0;
     // private bool playerLocated = false;
     // private Vector3 playerLocation;
@@ -50,24 +52,33 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        if (Vector3.Distance(transform.position, player.transform.position) < 5)
+        time += Time.deltaTime;
+        if (time >= 1) {
+            time = 0;
+            gun.Shoot(false);
+        }
+
+        if (Vector3.Distance(transform.position, player.transform.position) < navMeshAgent.stoppingDistance)
         { 
             navMeshAgent.isStopped = true;
+            transform.LookAt(player.transform, Vector3.up);
             // Debug.Log("Game Over");
             return;
         }
 
-        time += Time.deltaTime;
-        if (time >= 1) {
-            time = 0;
-            gun.shoot();
-        }
+        Debug.Log(Vector3.Distance(transform.position, player.transform.position));
 
         navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(player.transform.position);
     }
 
     private void OnTriggerEnter(Collider other) {
-        // if (other.GetComponent<Player>()) playerInSight = true;
+        if (other.GetComponent<Player>()) playerInSight = true;
+    }
+
+    public void Damage() {
+        slider.value -= 1;
+        Debug.Log(slider.value);
+        if (slider.value <= 0) Destroy(gameObject);
     }
 }

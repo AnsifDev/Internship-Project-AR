@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float lookSpeed, lookXLimit = 45;
     [SerializeField] private bool btn_down = false, mouse_controll = false;
     [SerializeField] private Gun gun;
+    [SerializeField] private Slider slider;
 
     private void Awake()
     {
@@ -36,7 +38,7 @@ public class Player : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0)) {
-            gun.shoot();
+            if (mouse_controll) gun.Shoot(true);
         }
 
         if (!characterController.isGrounded)
@@ -63,5 +65,10 @@ public class Player : MonoBehaviour
         cameraRotX = Mathf.Clamp(cameraRotX, -lookXLimit, lookXLimit);
         cameraTransform.localRotation = Quaternion.Euler(cameraRotX, 0, 0);
         if (mouse_controll) transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+    }
+
+    public void Damage() {
+        slider.value -= 1;
+        if (slider.value <= 0) UnityEditor.EditorApplication.isPlaying = false;
     }
 }
