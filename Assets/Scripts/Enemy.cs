@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, Damagable
 {
     private NavMeshAgent navMeshAgent;
     private Player player;
@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Gun gun;
     [SerializeField] private Slider slider;
     private float time = 0;
+    private Vector3 SpawnPoint;
     // private bool playerLocated = false;
     // private Vector3 playerLocation;
 
@@ -23,17 +24,20 @@ public class Enemy : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.isStopped = false;
         player = FindObjectOfType<Player>();
+        SpawnPoint = transform.position;
+        // FindObjectsOfType
     }
 
-    private void Start() {
+    private void OnEnable() {
         navMeshAgent.SetDestination(checkpost1.position);
-        Debug.Log("Launched");
+        transform.position = SpawnPoint;
+        slider.value = 10;
+        Debug.Log(SpawnPoint.ToString());
     }
 
 
     private void Update()
     {
-
         if (!playerInSight) {
 
             if (Vector3.Distance(transform.position, checkpost1.position) < 10) 
@@ -55,7 +59,7 @@ public class Enemy : MonoBehaviour
         time += Time.deltaTime;
         if (time >= 1) {
             time = 0;
-            gun.Shoot(false);
+            gun.Shoot();
         }
 
         if (Vector3.Distance(transform.position, player.transform.position) < navMeshAgent.stoppingDistance)
@@ -79,6 +83,21 @@ public class Enemy : MonoBehaviour
     public void Damage() {
         slider.value -= 1;
         Debug.Log(slider.value);
-        if (slider.value <= 0) Destroy(gameObject);
+        // if (slider.value <= 0) Destroy(gameObject);
+        if (slider.value <= 0) gameObject.SetActive(false);
+        
+    }
+
+    public void OnDamage()
+    {
+        slider.value -= 1;
+        // Debug.Log(slider.value);
+        // if (slider.value <= 0) Destroy(gameObject);
+        if (slider.value <= 0) gameObject.SetActive(false);
+    }
+
+    public int GetDamage()
+    {
+        return (int) slider.value;
     }
 }

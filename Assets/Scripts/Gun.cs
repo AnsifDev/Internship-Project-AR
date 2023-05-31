@@ -14,23 +14,28 @@ public class Gun : MonoBehaviour
         Debug.DrawRay(rayOrgin.position, rayOrgin.forward*maxDist, Color.red);
     }
 
-    public void Shoot(bool player) {
+    public Damagable Shoot() {
         RaycastHit raycastHit;
         audio.Play();
+        
         if (Physics.Raycast(rayOrgin.position, rayOrgin.forward, out raycastHit, maxDist, layerMask)) {
-            // Debug.Log(raycastHit.collider.gameObject);
-            if (player) {
-                Enemy enemy = raycastHit.collider.gameObject.GetComponentInParent<Enemy>();
-                if (enemy) enemy.Damage();
-            } 
-            else {
-                Player player1 = raycastHit.collider.gameObject.GetComponent<Player>();
-                if (player1) player1.Damage();
-            }
+            // if (player) {
+            //     // Debug.Log(raycastHit.collider.gameObject);
+            //     Enemy enemy = raycastHit.collider.gameObject.GetComponentInParent<Enemy>();
+            //     if (enemy) enemy.Damage();
+            // } 
+            // else {
+            //     // Debug.Log(rayOrgin.forward.ToString()+":"+this.GetComponentInParent<Enemy>().transform.forward.ToString());
+            //     Player player1 = raycastHit.collider.gameObject.GetComponent<Player>();
+            //     // Debug.Log("Hit");
+            //     if (player1) player1.Damage();   
+            // }
 
-
+            Damagable obj = raycastHit.collider.gameObject.GetComponentInParent<Damagable>();
+            if (obj != null) obj.OnDamage();
+            return obj;
             // if (TryGetComponent<Enemy>(out Enemy enemy)) {}
 
-        }
+        } else return null;
     }
 }

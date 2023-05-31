@@ -439,7 +439,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 4411099637347155310}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 1
   m_Height: 4
   m_Direction: 1
@@ -455,7 +455,7 @@ GameObject:
   - component: {fileID: 4411099637458246405}
   - component: {fileID: 4411099637458246400}
   - component: {fileID: 4411099637458246403}
-  - component: {fileID: 4411099637458246402}
+  - component: {fileID: 2708957647551970437}
   m_Layer: 6
   m_Name: Capsule
   m_TagString: Untagged
@@ -528,7 +528,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &4411099637458246402
+--- !u!136 &2708957647551970437
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

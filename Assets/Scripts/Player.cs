@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player: MonoBehaviour, Damagable
 {
     private CharacterController characterController;
     private Vector3 movementDirection;
@@ -14,6 +14,10 @@ public class Player : MonoBehaviour
     [SerializeField] private bool btn_down = false, mouse_controll = false;
     [SerializeField] private Gun gun;
     [SerializeField] private Slider slider;
+    [SerializeField] private GameObject BG, Mains;
+    private Enemy[] enemies;
+    private int numberOfEnemies;
+    private Vector3 SpwanPosition;
 
     private void Awake()
     {
@@ -21,6 +25,36 @@ public class Player : MonoBehaviour
         if (mouse_controll) Cursor.lockState = CursorLockMode.Locked;
         else Cursor.lockState = CursorLockMode.None;
         Cursor.visible = !mouse_controll; 
+        enemies = FindObjectsOfType<Enemy>();
+        foreach (Enemy enemy in enemies) enemy.gameObject.SetActive(false);
+        numberOfEnemies = enemies.Length;
+        Debug.Log(numberOfEnemies);
+        SpwanPosition = transform.position;
+    }
+
+    private void reset(bool controll) {
+        btn_down = false;
+        if (controll) Cursor.lockState = CursorLockMode.Locked;
+        else Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = !controll; 
+        foreach (Enemy enemy in enemies) enemy.gameObject.SetActive(controll);
+        Mains.SetActive(!controll);
+        BG.SetActive(!controll);
+        slider.gameObject.SetActive(controll);
+        slider.value = 10;
+        transform.position = SpwanPosition;
+    }
+
+    public void OnBtnClicked(string id) {
+        switch (id)
+        {
+            case "play": 
+                Debug.Log("Play"); 
+                reset(true);
+                mouse_controll = true;
+                break;
+            case "quit": Debug.Log("Quit"); break;
+        }
     }
 
     private void Update()
@@ -38,22 +72,31 @@ public class Player : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0)) {
-            if (mouse_controll) gun.Shoot(true);
+            if (mouse_controll) {
+                Enemy enemy = (Enemy) gun.Shoot();
+                if (enemy != null && enemy.GetDamage() <= 0) {
+                    numberOfEnemies--;
+                    Debug.Log(numberOfEnemies);
+                    if (numberOfEnemies <= 0) {
+                        foreach (Enemy enemy1 in enemies)
+                        {
+                            enemy1.gameObject.SetActive(true);
+                            numberOfEnemies++;                            
+                        }
+                    }
+                }
+            }
         }
 
         if (!characterController.isGrounded)
         {
             movementDirection.y -= gravity * Time.deltaTime;
-            //movementDirection.y = movementDirection.y - gravity * Time.deltaTime;
         }
 
-        if (Input.GetKey(KeyCode.Tab)) btn_down = true;
+        if (Input.GetKey(KeyCode.Escape)) btn_down = true;
         else if (btn_down) {
             mouse_controll = !mouse_controll;
-            btn_down = false;
-            if (mouse_controll) Cursor.lockState = CursorLockMode.Locked;
-            else Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = !mouse_controll; 
+            reset(mouse_controll);
         }
         
 
@@ -70,5 +113,18 @@ public class Player : MonoBehaviour
     public void Damage() {
         slider.value -= 1;
         if (slider.value <= 0) UnityEditor.EditorApplication.isPlaying = false;
+    }
+
+    public void OnDamage()
+    {
+        slider.value -= 1;
+        if (slider.value <= 0) {
+            reset(false);
+        }
+    }
+
+    public int GetDamage()
+    {
+        return (int) slider.value;
     }
 }
