@@ -66,7 +66,7 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        Debug.Log(Vector3.Distance(transform.position, player.transform.position));
+        // Debug.Log(Vector3.Distance(transform.position, player.transform.position));
 
         navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(player.transform.position);

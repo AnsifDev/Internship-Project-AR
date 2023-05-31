@@ -133,7 +133,7 @@ MonoBehaviour:
   maxDist: 20
   layerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 192
   audio: {fileID: 3420292804240002275}
 --- !u!82 &3420292804240002275
 AudioSource:

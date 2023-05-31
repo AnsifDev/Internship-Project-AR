@@ -20,7 +20,7 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(rayOrgin.position, rayOrgin.forward, out raycastHit, maxDist, layerMask)) {
             // Debug.Log(raycastHit.collider.gameObject);
             if (player) {
-                Enemy enemy = raycastHit.collider.gameObject.GetComponent<Enemy>();
+                Enemy enemy = raycastHit.collider.gameObject.GetComponentInParent<Enemy>();
                 if (enemy) enemy.Damage();
             } 
             else {
